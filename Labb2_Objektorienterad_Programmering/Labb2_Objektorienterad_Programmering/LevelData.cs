@@ -24,7 +24,9 @@ namespace Labb2_Objektorienterad_Programmering
 
         public void Load(string filename)
         {
-            var lines = File.ReadAllLines(filename);
+            string path = Path.Combine(AppContext.BaseDirectory, "Levels", "Level1.txt");
+            var lines = File.ReadAllLines(path);
+
 
             for (int y = 0; y < lines.Length; y++)
             {
