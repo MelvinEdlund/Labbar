@@ -58,7 +58,7 @@ namespace Labb2_Objektorienterad_Programmering
         {
             Console.Clear();
 
-            string text = "GAME OVER";
+            string text = "GAME OVER ";
             string retry = "Press R to restart or ESC to quit";
 
             int centerX = (Console.WindowWidth - text.Length) / 2;
