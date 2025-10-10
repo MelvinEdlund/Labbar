@@ -8,10 +8,10 @@ namespace Labb2_Objektorienterad_Programmering.Elements
 {
     internal class Snake : Enemy
     {
-        public Snake(int x, int y) : base(x, y, 's', ConsoleColor.Green, "Snake", 25)
+        public Snake(int x, int y) : base(x, y, 's', ConsoleColor.Green, "Snake", 5)
         {
             AttackDice = new Dice(3, 4, 2);
-            DefenceDice = new Dice(1, 8, 5);
+            DefenceDice = new Dice(1, 7, 5);
         }
         public override void Update(LevelData level)
         {
@@ -24,9 +24,9 @@ namespace Labb2_Objektorienterad_Programmering.Elements
             if (distance <= 2)
             {
                 if (Math.Abs(distX) > Math.Abs(distY))
-                    dx = distX > 0 ? 1 : -1; // gå bort i X-led
+                    dx = distX > 0 ? 1 : -1; 
                 else
-                    dy = distY > 0 ? 1 : -1; // gå bort i Y-led
+                    dy = distY > 0 ? 1 : -1; 
             }
 
             level.TryMoveEnemy(this, dx, dy);

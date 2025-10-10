@@ -31,7 +31,7 @@ namespace Labb2_Objektorienterad_Programmering
             return Math.Sqrt(dx * dx + dy * dy);
         }
 
-        // Gör att Position kan jämföras i HashSet och Dictionary
+        // Position jämförs i HashSet och Dictionary
         public override bool Equals(object obj)
         {
             return obj is Position p && p.X == X && p.Y == Y;

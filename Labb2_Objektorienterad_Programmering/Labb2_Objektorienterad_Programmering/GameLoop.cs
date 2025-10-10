@@ -18,40 +18,40 @@ namespace Labb2_Objektorienterad_Programmering
             level = new LevelData();
             level.Load("Level1.txt");
 
-            hud = new HUD(level.Player);
-            level.Hud = hud; 
+            hud = new HUD(level.Player, level);
+            level.Hud = hud;
+            level.Combat = new CombatManager(hud);
             hud.Draw();
 
             bool running = true;
             while (running)
             {
-                var key = Console.ReadKey(true);
-
-
                 int dx = 0, dy = 0;
-                switch (key.Key)
+
+                if (Console.KeyAvailable)
                 {
-                    case ConsoleKey.UpArrow: dy = -1; break;
-                    case ConsoleKey.DownArrow: dy = 1; break;
-                    case ConsoleKey.LeftArrow: dx = -1; break;
-                    case ConsoleKey.RightArrow: dx = 1; break;
-                    case ConsoleKey.Escape: running = false; continue;
-                    default: continue;
+                    var key = Console.ReadKey(true).Key;
+
+                    switch (key)
+                    {
+                        case ConsoleKey.UpArrow: dy = -1; break;
+                        case ConsoleKey.DownArrow: dy = 1; break;
+                        case ConsoleKey.LeftArrow: dx = -1; break;
+                        case ConsoleKey.RightArrow: dx = 1; break;
+                        case ConsoleKey.Escape: running = false; continue;
+                    }
+
+                    while (Console.KeyAvailable) Console.ReadKey(true);
                 }
 
-                level.TryMovePlayer(dx, dy);
-                level.UpdateEnemies();
-
-                hud.Draw();
-
-                if (level.Player.HP <= 0)
+                if (dx != 0 || dy != 0)
                 {
-                    ShowGameOver();
-                    return; // avsluta loopen när game over visas
+                    level.TryMovePlayer(dx, dy);
+                    level.UpdateEnemies();
+                    hud.Draw();
                 }
+                System.Threading.Thread.Sleep(100);
             }
-            System.Threading.Thread.Sleep(50);
-
         }
 
         public void ShowGameOver()
@@ -81,7 +81,7 @@ namespace Labb2_Objektorienterad_Programmering
                 }
                 else if (key == ConsoleKey.R)
                 {
-                    Run(); // starta om spelet
+                    Run();
                     return;
                 }
             }

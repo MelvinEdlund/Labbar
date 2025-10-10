@@ -9,13 +9,14 @@ namespace Labb2_Objektorienterad_Programmering
     public class HUD
     {
         private Player player;
-
+        private LevelData level;
         private string playerRoll = "";
         private string enemyRoll = "";
 
-        public HUD(Player player)
+        public HUD(Player player, LevelData level)
         {
             this.player = player;
+            this.level = level;
         }
 
         public void SetPlayerRoll(int attack, int defence, int damage)
@@ -30,22 +31,26 @@ namespace Labb2_Objektorienterad_Programmering
 
         public void Draw()
         {
-            int hudY = Console.WindowHeight - 3;
-            
-            // Player HUD
-            Console.SetCursorPosition(0, hudY);
-            Console.Write(new string(' ', Console.WindowWidth));
-            Console.SetCursorPosition(0, hudY);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write($"HP: {player.HP}   ");
-            Console.ResetColor();
-            Console.Write(playerRoll);
+            int hudY = Console.WindowHeight - 4;
 
-            // Enemy HUD
-            Console.SetCursorPosition(0, hudY + 1);
+            WriteLine(0, hudY, $"HP: {player.HP}   Round: {level.Round}", ConsoleColor.Yellow);
+
+            WriteLine(0, hudY + 1, playerRoll);
+
+            WriteLine(0, hudY + 2, enemyRoll);
+        }
+
+        private void WriteLine(int x, int y, string text, ConsoleColor? color = null)
+        {
+            if (y < 0 || y >= Console.WindowHeight) return;
+
+            Console.SetCursorPosition(x, y);
             Console.Write(new string(' ', Console.WindowWidth));
-            Console.SetCursorPosition(0, hudY + 1);
-            Console.Write(enemyRoll);
+            Console.SetCursorPosition(x, y);
+
+            if (color != null) Console.ForegroundColor = color.Value;
+            Console.Write(text);
+            Console.ResetColor();
         }
     }
 }

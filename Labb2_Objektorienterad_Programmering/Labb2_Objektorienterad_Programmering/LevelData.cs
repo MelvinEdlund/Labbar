@@ -12,15 +12,16 @@ namespace Labb2_Objektorienterad_Programmering
 {
     public class LevelData
     {
+        private static readonly Random rng = new Random();
         public HUD Hud { get; set; } 
 
         private List<LevelElement> elements = new List<LevelElement>();
         public IReadOnlyList<LevelElement> Elements => elements;
-        public Player Player { get; private set; }
-
-        private static readonly Random rng = new Random();
 
         private HashSet<Position> discoveredWalls = new HashSet<Position>();
+        public Player Player { get; private set; }
+        public int Round { get; private set; } = 1;
+        public CombatManager Combat { get; set; }
 
         public void Load(string filename)
         {
@@ -54,7 +55,7 @@ namespace Labb2_Objektorienterad_Programmering
                     }
                 }
             }
-                DrawVisibleArea(5);    
+            DrawVisibleArea(5);    
 
         }
         private bool IsBlocked(Position pos)
@@ -67,33 +68,24 @@ namespace Labb2_Objektorienterad_Programmering
             if (Player == null) return false;
 
             var targetPos = Player.Pos.Offset(dx, dy);
-
             var enemy = FindEnemyAt(targetPos);
+
             if (enemy != null)
             {
-                ResolveCombat(Player, enemy, playerAttacksFirst: true);
-
-                if (enemy.HP <= 0)
-                {
-                    elements.Remove(enemy);
-
-                    Console.SetCursorPosition(Player.Pos.X, Player.Pos.Y);
-                    Console.Write(' ');
-                    Player.Pos = targetPos;
-                    Player.Draw();
-                    return true;
-                }
-                else return true;
+                Combat.ResolveCombat(Player, enemy, true, elements);
+                Round++;
+                return true;
             }
 
-            if (IsBlocked(targetPos))
-                return false;
+            if (IsBlocked(targetPos)) return false;
 
             Console.SetCursorPosition(Player.Pos.X, Player.Pos.Y);
             Console.Write(' ');
             Player.Pos = targetPos;
             Player.Draw();
+
             DrawVisibleArea(5);
+            Round++;
             return true;
         }
 
@@ -105,7 +97,7 @@ namespace Labb2_Objektorienterad_Programmering
 
             if (IsPlayerAt(targetPos))
             {
-                ResolveCombat(Player, enemy, playerAttacksFirst: false);
+                Combat.ResolveCombat(Player, enemy, playerAttacksFirst: false, elements);
                 return true;
             }
 
@@ -127,8 +119,6 @@ namespace Labb2_Objektorienterad_Programmering
 
         }
 
-
-
         private Enemy FindEnemyAt(Position pos)
         {
             return elements.OfType<Enemy>().FirstOrDefault(e => e.Pos.X == pos.X && e.Pos.Y == pos.Y);
@@ -139,60 +129,6 @@ namespace Labb2_Objektorienterad_Programmering
             return Player != null && Player.Pos.X == pos.X && Player.Pos.Y == pos.Y;
         }
 
-        private void PlayerAttacksEnemy(Player player, Enemy enemy)
-        {
-            int attack = player.AttackDice.Throw();
-            int defence = enemy.DefenceDice.Throw();
-            int damage = attack - defence;
-            if (damage > 0) enemy.TakeDamage(damage);
-
-            Hud?.SetPlayerRoll(attack, defence, Math.Max(0, damage));
-        }
-
-        private void EnemyAttacksPlayer(Enemy enemy, Player player)
-        {
-            int attack = enemy.AttackDice.Throw();
-            int defence = player.DefenceDice.Throw();
-            int damage = attack - defence;
-            if (damage > 0) player.TakeDamage(damage);
-
-            Hud?.SetEnemyRoll(enemy.Name, attack, defence, Math.Max(0, damage));
-        }
-
-        private void ResolveCombat(Player player, Enemy enemy, bool playerAttacksFirst)
-        {
-            if (playerAttacksFirst)
-            {
-                PlayerAttacksEnemy(player, enemy);
-                if (enemy.HP > 0)
-                {
-                    EnemyAttacksPlayer(enemy, player);
-                }
-            }
-            else
-            {
-                EnemyAttacksPlayer(enemy, player);
-                if (player.HP > 0)
-                {
-                    PlayerAttacksEnemy(player, enemy);
-                }
-            }
-
-            if (enemy.HP <= 0)
-            {
-                Hud?.SetEnemyRoll(enemy.Name, 0, 0, 0);
-                Console.SetCursorPosition(enemy.Pos.X, enemy.Pos.Y);
-                Console.Write(' ');
-                elements.Remove(enemy);
-            }
-
-            if (player.HP <= 0)
-            {
-                Hud?.SetPlayerRoll(0, 0, 0);
-                Console.SetCursorPosition(0, 0);
-                new GameLoop().ShowGameOver();
-            }
-        }
         public void DrawVisibleArea(int visionRange)
         {
             foreach (var element in elements)
