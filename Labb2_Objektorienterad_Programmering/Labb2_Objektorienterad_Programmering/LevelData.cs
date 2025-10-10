@@ -29,7 +29,7 @@ namespace Labb2_Objektorienterad_Programmering
             var lines = File.ReadAllLines(path);
 
 
-            for (int y = 0; y < lines.Length; y++)
+            for ( int y = 0; y < lines.Length; y++ )
             {
                 string line = lines[y];
 
