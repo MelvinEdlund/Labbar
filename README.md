@@ -1,7 +1,6 @@
 # Labbar till NEU25G
 
 ## [Labb 1 – Algoritmer](https://github.com/MelvinEdlund/Labbar/tree/master/Labb1_Algoritmer)
-# Uppgift - Hitta tal i sträng
 - Programmet ber användaren mata in en text i konsolen.  
 - Strängen söks igenom efter delsträngar som:  
   - Börjar och slutar på samma siffra.  
