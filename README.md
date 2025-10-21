@@ -1,7 +1,7 @@
 # Labbar till NEU25G
 
 ## [Labb 1 – Algoritmer](https://github.com/MelvinEdlund/Labbar/tree/master/Labb1_Algoritmer)
-Det här är min första inlämningsuppgift i mina .NET-studier på IT-Högskolan, ungefär tre veckor in i kursen. (September 2024)
+Det här är min första inlämningsuppgift i Programmering med C#, ungefär tre veckor in i kursen. (September 2024)
 Jag började precis komma in i hur man kan använda arrayer, loopar och villkor i C# och det här var ett bra sätt att träna.  
 
 ### Uppgift
