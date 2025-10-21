@@ -1,7 +1,7 @@
 # Labbar till NEU25G
 
 ## [Labb 1 – Algoritmer](https://github.com/MelvinEdlund/Labbar/tree/master/Labb1_Algoritmer)
-Det här är min första inlämningsuppgift, ungefär tre veckor in i kursen.  
+Det här är min första inlämningsuppgift i mina .NET-studier på IT-Högskolan, ungefär tre veckor in i kursen. (September 2024)
 Jag började precis komma in i hur man kan använda arrayer, loopar och villkor i C# och det här var ett bra sätt att träna.  
 
 ### Uppgift
@@ -12,10 +12,14 @@ Jag började precis komma in i hur man kan använda arrayer, loopar och villkor 
   - Start- och slutsiffran får inte förekomma någonstans mitt i talet.  
 - Varje delsträng som matchar skrivs ut och markeras i färg.  
 - Alla hittade tal adderas ihop och totalsumman skrivs ut sist.
+
+  **Exempel på output**  
 ![Exempel på output](bilder/labb1.png)
-#
+
+---
+
 ## [Labb 2 – Objektorienterad Programmering](https://github.com/MelvinEdlund/Labbar/tree/master/Labb2_Objektorienterad_Programmering)
-Detta är min andra inlämningsuppgift i mina .NET-studier på IT-Högskolan.  
+Detta är min andra inlämningsuppgift (Oktober 2024).  
 
 Projektet är en förenklad version av ett dungeon crawler-spel i konsolen där spelaren rör sig i en bana med väggar och fiender.  
 
