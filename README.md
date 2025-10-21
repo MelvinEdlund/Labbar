@@ -8,7 +8,7 @@ Det här är min första inlämningsuppgift i Programmering med C#, ungefär tre
 - Strängen söks igenom efter delsträngar som:  
   - Börjar och slutar på samma siffra.  
   - Bara innehåller siffror (inga bokstäver eller andra tecken).  
-  - Start- och slutsiffran får inte förekomma någonstans mitt i talet.  
+  - Start och slutsiffran får inte förekomma någonstans mitt i talet.  
 - Varje delsträng som matchar skrivs ut och markeras i färg.  
 - Alla hittade tal adderas ihop och totalsumman skrivs ut sist.
 
@@ -25,13 +25,13 @@ Uppgiften är att skapa en enkel version av dungeon crawler i konsolen där spel
 ## Funktioner
 - **Banlayout:** Läser in en fördefinierad bana från en textfil med väggar, spelare och fiender (råttor och ormar).  
 - **Klasshierarki:** Använder en abstrakt basklass `LevelElement` med subklasser för väggar och fiender.  
-- **Spelloop:** Hanterar spelarens och fiendernas drag i en loop med förflyttning, attacker och strider.  
-- **Sikt:** Spelarens synfält är begränsat till en radie på 5 enheter. Väggar som en gång upptäckts förblir synliga.  
-- **Tärningsmekanik:** Använder tärningsslag för attack och försvar, där spelare och fiender gör skada baserat på resultat.  
+- **Gameloop:** Hanterar spelarens och fiendernas drag i en loop med förflyttning, attacker och strider.  
+- **Visionrange:** Spelarens synfält är begränsat till en radie på 5 enheter. Väggar som en gång upptäckts förblir synliga.  
+- **Tärningsslag:** Använder tärningsslag för attack och försvar, där spelare och fiender gör skada baserat på resultat.  
 - **Rörelsemönster:**  
-  - Spelaren styrs av inmatning.  
+  - Spelaren styrs av piltangenterna.  
   - Råttor rör sig slumpmässigt.  
-  - Ormar försöker fly från spelaren om denne kommer för nära.  
+  - Ormar försöker fly från spelaren om man kommer för nära.  
 
 ## Screenshots
 **Mitt i banan – strid med en orm:**  
