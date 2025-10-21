@@ -42,6 +42,3 @@ Uppgiften är att skapa en enkel version av dungeon crawler i konsolen där spel
 
 **Game Over – när spelaren förlorar:**  
 ![Game Over](bilder/labb2_3.png) 
-
-## Syfte
-Projektet fokuserar på objektorienterade principer som arv, abstraktion och kodåteranvändning.  
