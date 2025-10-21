@@ -20,7 +20,7 @@ Det här är min första inlämningsuppgift i Programmering med C#, ungefär tre
 ## [Labb 2 – Objektorienterad Programmering](https://github.com/MelvinEdlund/Labbar/tree/master/Labb2_Objektorienterad_Programmering)
 Detta är min andra inlämningsuppgift (Oktober 2025).  
 
-Projektet är en förenklad version av ett dungeon crawler-spel i konsolen där spelaren rör sig i en bana med väggar och fiender.  
+Uppgiften är att skapa en enkel version av dungeon crawler i konsolen där spelaren rör sig i en bana med väggar och fiender.  
 
 ## Funktioner
 - **Banlayout:** Läser in en fördefinierad bana från en textfil med väggar, spelare och fiender (råttor och ormar).  
