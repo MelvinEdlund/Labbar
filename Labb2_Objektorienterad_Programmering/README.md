@@ -1,4 +1,4 @@
-## [Labb 2 – Objektorienterad Programmering](https://github.com/MelvinEdlund/Labbar/tree/master/Labb2_Objektorienterad_Programmering)
+## Labb 2 – Objektorienterad Programmering
 Detta är min andra inlämningsuppgift (Oktober 2025).  
 
 ### Uppgift
