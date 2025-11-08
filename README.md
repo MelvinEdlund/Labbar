@@ -57,7 +57,7 @@ Programmet är ett WPF-verktyg där användaren kan skapa och redigera frågepak
 - **Import/Export:** Importera quizpaket från JSON-filer och exportera tillbaka i korrekt struktur.  
 - **API-integration:**  
   - Hämtar frågor från ett externt trivia-API (Open Trivia DB eller motsvarande).  
-  - API-svaret mappas till interna modeller med DTO-klasser.  
+  - API-svaret mappas till interna modeller med DTO-klasser.   
   - Användaren kan förhandsgranska och välja vilka frågor som ska läggas till.  
 - **MVVM-struktur:** ViewModels hanterar logik, validering och bindningar till gränssnittet.  
 
