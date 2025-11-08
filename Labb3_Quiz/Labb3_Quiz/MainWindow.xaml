@@ -34,7 +34,7 @@
 
         <views:MenuView Grid.Row="0" />
 
-        <ContentControl Grid.Row="1" Content="{Binding CurrentView}">
+        <ContentControl Grid.Row="1" Content="{Binding CurrentView}"> 
             <ContentControl.Resources>
                 <DataTemplate DataType="{x:Type viewmodel:ConfigurationViewModel}">
                     <views:ConfigurationView />
