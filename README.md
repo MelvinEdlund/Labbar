@@ -70,7 +70,7 @@ Programmet är ett WPF-verktyg där användaren kan skapa och redigera frågepak
 ![Resultatfönster](bilder/labb3_3.png)
 
 **Importdialog:**  
-![FilesTab](bilder/labb3_4.png) ![Importdialog](bilder/labb3_5.png) ![Importdialog](bilder/labb3_6.png)
+![FilesTab](bilder/labb3_4.png) ![Importdialog](bilder/labb3_4.png) ![Importdialog](bilder/labb3_6.png)
 
 
 
