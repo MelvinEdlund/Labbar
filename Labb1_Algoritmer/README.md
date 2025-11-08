@@ -1,4 +1,4 @@
-## [Labb 1 – Algoritmer](https://github.com/MelvinEdlund/Labbar/tree/master/Labb1_Algoritmer)
+## Labb 1 – Algoritmer
 Det här är min första inlämningsuppgift i Programmering med C#, ungefär tre veckor in i kursen. (September 2025)
 
 ### Uppgift
