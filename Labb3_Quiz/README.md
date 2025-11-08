@@ -1,5 +1,5 @@
 ## Labb 3 – Quiz Configurator
-Detta är min tredje inlämningsuppgift i Programmering med C#, ungefär två månader in i kursen. (November 2025)
+Detta är min tredje inlämningsuppgift i Programmering med C#, ungefär två månader in i kursen. (November 2025) 
 
 ### Uppgift
 Programmet är ett WPF-verktyg där användaren kan skapa och redigera frågepaket till ett quiz. Det stödjer import/export av JSON, hämtning av externa frågor via API och är byggt enligt MVVM med DataBinding, Commands och dialogrutor.
