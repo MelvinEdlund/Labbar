@@ -1,6 +1,6 @@
 # Labbar till NEU25G
 
-## [Labb 1 – Algoritmer](https://github.com/MelvinEdlund/Labbar/tree/master/Labb1_Algoritmer)
+## [Labb 1 – Algoritmer](https://github.com/MelvinEdlund/Lab-Assignments/tree/master/Labb1_Algoritmer)
 Det här är min första inlämningsuppgift i Programmering med C#, ungefär tre veckor in i kursen. (September 2025)
 
 ### Uppgift
@@ -17,7 +17,7 @@ Det här är min första inlämningsuppgift i Programmering med C#, ungefär tre
 
 ---
 
-## [Labb 2 – Objektorienterad Programmering](https://github.com/MelvinEdlund/Labbar/tree/master/Labb2_Objektorienterad_Programmering)
+## [Labb 2 – Objektorienterad Programmering](https://github.com/MelvinEdlund/Lab-Assignments/tree/master/Labb2_Objektorienterad_Programmering)
 Detta är min andra inlämningsuppgift (Oktober 2025).  
 
 ### Uppgift
@@ -46,7 +46,7 @@ Uppgiften är att skapa en enkel version av dungeon crawler i konsolen där spel
 
 ---
 
-## [Labb 3 – Quiz Configurator](https://github.com/MelvinEdlund/Labbar/tree/master/Labb3_Quiz)
+## [Labb 3 – Quiz Configurator](https://github.com/MelvinEdlund/Lab-Assignments/tree/master/Labb3_Quiz)
 Detta är min tredje inlämningsuppgift i Programmering med C#, ungefär två månader in i kursen. (November 2025)
 
 ### Uppgift
