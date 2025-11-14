@@ -1,4 +1,4 @@
-## [Labb 3 – Quiz Configurator](https://github.com/MelvinEdlund/Labbar/tree/master/Labb3_QuizConfigurator)
+## Labb 3 – Quiz Configurator
 Detta är min tredje inlämningsuppgift i Programmering med C#, ungefär två månader in i kursen. (November 2025)
 
 ### Uppgift
