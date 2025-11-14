@@ -3,9 +3,7 @@ using System.Collections.Generic;
 
 namespace Labb3_Quiz.Models;
 
-
 public enum PackDifficulty { Easy, Medium, Hard }
-
 
 public class QuestionPack
 {

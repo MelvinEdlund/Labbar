@@ -4,6 +4,7 @@ using Labb3_Quiz.ViewModels;
 
 namespace Labb3_Quiz.Views.Dialogs;
 
+// (laddar kategorier från API vid öppning)
 public partial class ImportQuestionsDialog : Window
 {
     public ImportQuestionsDialog()
@@ -13,7 +14,6 @@ public partial class ImportQuestionsDialog : Window
         {
             if (DataContext is ImportQuestionsViewModel vm && vm.LoadCategoriesCommand.CanExecute(null))
             {
-                // Ladda kategorier automatiskt när dialogen öppnas
                 await Task.Run(async () =>
                 {
                     await Application.Current.Dispatcher.InvokeAsync(() => 
@@ -26,9 +26,7 @@ public partial class ImportQuestionsDialog : Window
     private void DifficultyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (sender is ComboBox comboBox && comboBox.SelectedItem is ComboBoxItem item && DataContext is ImportQuestionsViewModel vm)
-        {
             vm.SelectedDifficulty = item.Tag?.ToString();
-        }
     }
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)

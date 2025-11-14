@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace Labb3_Quiz.ViewModels;
 
-
+// ViewModel för redigeringsvyn (lägg till/ta bort frågor, öppna pack-inställningar)
 public class ConfigurationViewModel : ViewModelBase
 {
     private readonly MainWindowViewModel? _mainWindowViewModel;
@@ -17,7 +17,6 @@ public class ConfigurationViewModel : ViewModelBase
     {
         _mainWindowViewModel = mainWindowViewModel;
         _dialogService = dialogService;
-
         AddQuestionCommand = new DelegateCommand(_ => AddQuestion());
         RemoveQuestionCommand = new DelegateCommand(_ => RemoveQuestion(), _ => SelectedQuestion != null);
         OpenPackOptionsCommand = new DelegateCommand(_ => OpenPackOptions());
@@ -31,7 +30,6 @@ public class ConfigurationViewModel : ViewModelBase
         set
         {
             _selectedQuestion = value;
-
             if (_selectedQuestion != null && _selectedQuestion.Options.Count >= 4)
             {
                 _selectedQuestion.Options[0].IsCorrect = true;
@@ -48,11 +46,9 @@ public class ConfigurationViewModel : ViewModelBase
     public DelegateCommand RemoveQuestionCommand { get; }
     public DelegateCommand OpenPackOptionsCommand { get; }
 
-
     private void AddQuestion()
     {
         if (ActivePack == null) return;
-
         var question = new Question
         {
             Text = "New Question",
@@ -64,32 +60,24 @@ public class ConfigurationViewModel : ViewModelBase
                 new AnswerOption { Text = "", IsCorrect = false }
             }
         };
-
         ActivePack.Questions.Add(question);
-        SelectedQuestion = question; 
+        SelectedQuestion = question;
     }
 
-    
     private void RemoveQuestion()
     {
         if (ActivePack == null || SelectedQuestion == null) return;
-
-            ActivePack.Questions.Remove(SelectedQuestion);
-            SelectedQuestion = null;
-        
+        ActivePack.Questions.Remove(SelectedQuestion);
+        SelectedQuestion = null;
     }
-
 
     private void OpenPackOptions()
     {
         if (ActivePack == null) return;
-
-        var owner = Application.Current.MainWindow;
         var dialog = new PackOptionsDialog(ActivePack)
         {
-            Owner = owner
+            Owner = Application.Current.MainWindow
         };
-
-        dialog.ShowDialog(); 
+        dialog.ShowDialog();
     }
 }

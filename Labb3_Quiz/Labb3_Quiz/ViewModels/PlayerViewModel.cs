@@ -7,12 +7,12 @@ using System.Windows.Threading;
 
 namespace Labb3_Quiz.ViewModels;
 
-
+// ViewModel för quiz-spel (hanterar timer, poäng, blandning, feedback)
 public class PlayerViewModel : ViewModelBase
-    {
-        private readonly MainWindowViewModel? _mainWindowViewModel;
+{
+    private readonly MainWindowViewModel? _mainWindowViewModel;
     private readonly IDialogService _dialogService;
-    private readonly DispatcherTimer _timer;
+    private readonly DispatcherTimer _timer; 
     private readonly DispatcherTimer _feedbackTimer;
     private List<Question> _shuffledQuestions = new();
     private List<AnswerOption> _shuffledOptions = new();
@@ -31,34 +31,24 @@ public class PlayerViewModel : ViewModelBase
         _mainWindowViewModel = mainWindowViewModel;
         _dialogService = dialogService;
 
-        _timer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromSeconds(1)
-        };
+        _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
         _timer.Tick += Timer_Tick;
-
-        _feedbackTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromSeconds(1)
-        };
+        _feedbackTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
         _feedbackTimer.Tick += FeedbackTimer_Tick;
-
         ShuffledOptions = new ObservableCollection<AnswerOption>();
 
-        // Commands
         StartRoundCommand = new DelegateCommand(_ => StartRound(), _ => ActivePack != null && ActivePack.Questions.Count > 0);
         SubmitAnswerCommand = new DelegateCommand(SubmitAnswer, _ => _isRoundActive && !_hasAnswered && _currentQuestionIndex >= 0);
         NextQuestionCommand = new DelegateCommand(_ => NextQuestion(), _ => _hasAnswered || _remainingTime <= 0);
 
-        // Lyssna på när ActivePack ändras för att återställa quiz-tillståndet
         if (_mainWindowViewModel != null)
         {
             _mainWindowViewModel.PropertyChanged += MainViewModel_PropertyChanged;
-            // Uppdatera pack-information vid initiering om det redan finns ett ActivePack
             OnActivePackChanged();
         }
     }
 
+    // Reagerar på ändringar i huvud-ViewModel (ActivePack, IsPlayMode)
     private void MainViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(MainWindowViewModel.ActivePack))
@@ -68,26 +58,14 @@ public class PlayerViewModel : ViewModelBase
         }
         else if (e.PropertyName == nameof(MainWindowViewModel.IsPlayMode))
         {
-            // När man går från play till edit, återställ quiz-tillståndet
             if (!_mainWindowViewModel?.IsPlayMode ?? false)
-            {
                 ResetQuizState();
-            }
-            else
-            {
-                // När man går till play mode, starta quizet automatiskt
-                if (ActivePack != null && ActivePack.Questions.Count > 0 && !_isRoundActive)
-                {
-                    StartRound();
-                }
-            }
+            else if (ActivePack != null && ActivePack.Questions.Count > 0 && !_isRoundActive)
+                StartRound();
         }
     }
 
-    public QuestionPackViewModel? ActivePack
-    {
-        get => _mainWindowViewModel?.ActivePack;
-    }
+    public QuestionPackViewModel? ActivePack => _mainWindowViewModel?.ActivePack;
 
     private void OnActivePackChanged()
     {
@@ -112,12 +90,7 @@ public class PlayerViewModel : ViewModelBase
     }
 
     public int CurrentQuestionNumber => _currentQuestionIndex >= 0 ? _currentQuestionIndex + 1 : 0;
-    
-    public int TotalQuestions
-    {
-        get => _shuffledQuestions.Count;
-    }
-
+    public int TotalQuestions => _shuffledQuestions.Count;
     public int PackQuestionCount => ActivePack?.Questions.Count ?? 0;
     public Question? CurrentQuestion => _currentQuestionIndex >= 0 && _currentQuestionIndex < _shuffledQuestions.Count 
         ? _shuffledQuestions[_currentQuestionIndex] 
@@ -199,70 +172,50 @@ public class PlayerViewModel : ViewModelBase
     public DelegateCommand SubmitAnswerCommand { get; }
     public DelegateCommand NextQuestionCommand { get; }
 
-    /// <summary>
-    /// Starts a new quiz round by copying questions, shuffling them, and loading the first question.
-    /// </summary>
     private void StartRound()
     {
         if (ActivePack == null || ActivePack.Questions.Count == 0) return;
-
-        // Skapa kopia av frågor så vi inte ändrar originalet
         _shuffledQuestions = ActivePack.Questions.Select(q => new Question
         {
             Text = q.Text,
             Options = q.Options.Select(o => new AnswerOption { Text = o.Text, IsCorrect = o.IsCorrect }).ToList()
         }).ToList();
-
         RandomListAlgoritm(_shuffledQuestions);
-        
         Score = 0;
         CurrentQuestionIndex = 0;
         IsRoundActive = true;
         ShowResults = false;
         StartRoundCommand.RaiseCanExecuteChanged();
-
         LoadQuestion();
     }
-
-    /// laddar frågan, randomizear svarsalternativ, startar timern
 
     private void LoadQuestion()
     {
         _feedbackTimer.Stop();
         _feedbackDelaySeconds = 0;
-
         if (_currentQuestionIndex < 0 || _currentQuestionIndex >= _shuffledQuestions.Count)
         {
             EndRound();
             return;
         }
-
         var question = _shuffledQuestions[_currentQuestionIndex];
         _shuffledOptions = question.Options.ToList();
         RandomListAlgoritm(_shuffledOptions);
-
         ShuffledOptions.Clear();
         foreach (var option in _shuffledOptions)
-        {
             ShuffledOptions.Add(option);
-        }
-
         HasAnswered = false;
         CorrectAnswerText = "";
         UserAnswerText = "";
         RemainingTime = ActivePack?.TimePerQuestionSeconds ?? 20;
-
         _timer.Start();
         RaisePropertyChanged(nameof(CurrentQuestion));
     }
 
-
     private void Timer_Tick(object? sender, EventArgs e)
     {
         if (_remainingTime > 0)
-        {
-            RemainingTime--; 
-        }
+            RemainingTime--;
         else
         {
             _timer.Stop();
@@ -280,6 +233,7 @@ public class PlayerViewModel : ViewModelBase
         }
     }
 
+    // Feedback timer: väntar 2 sek innan nästa fråga
     private void FeedbackTimer_Tick(object? sender, EventArgs e)
     {
         _feedbackDelaySeconds--;
@@ -296,14 +250,12 @@ public class PlayerViewModel : ViewModelBase
         _feedbackTimer.Start();
     }
 
-    
+    // Hanterar svar (kontrollerar rätt/fel, ökar poäng, visar feedback)
     private void SubmitAnswer(object? parameter)
     {
         if (parameter is not AnswerOption selectedOption || _hasAnswered) return;
-
         _timer.Stop();
         var correctOption = _shuffledOptions.FirstOrDefault(o => o.IsCorrect);
-        
         if (correctOption != null)
         {
             if (selectedOption.IsCorrect)
@@ -318,11 +270,9 @@ public class PlayerViewModel : ViewModelBase
                 CorrectAnswerText = $"Correct answer: {correctOption.Text}";
             }
         }
-
         HasAnswered = true;
         StartFeedbackTimer();
     }
-
 
     private void NextQuestion()
     {

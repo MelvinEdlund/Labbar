@@ -21,7 +21,8 @@
             
             <MenuItem 
                 Header="_Select Question Pack"
-                Icon="{fa:Icon FolderOpen}">
+                Icon="{fa:Icon FolderOpen}"
+                IsEnabled="{Binding IsPlayMode, Converter={StaticResource BoolInverterConverter}}">
                 <MenuItem.ItemsSource>
                     <Binding Path="Packs"/>
                 </MenuItem.ItemsSource>

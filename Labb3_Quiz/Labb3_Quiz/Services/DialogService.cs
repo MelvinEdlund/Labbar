@@ -5,6 +5,7 @@ using Labb3_Quiz.Views.Dialogs;
 
 namespace Labb3_Quiz.Services;
 
+// Service för att visa dialoger
 public class DialogService : IDialogService
 {
     private readonly ITriviaService _triviaService;
@@ -30,18 +31,11 @@ public class DialogService : IDialogService
         return result == MessageBoxResult.Yes;
     }
 
-    public T? ShowDialog<T>() where T : Window
-    {
-        var window = Activator.CreateInstance<T>();
-        return window.ShowDialog() == true ? window : null;
-    }
-
     public void ShowImportQuestionsDialog(
         Func<QuestionPackViewModel?> getSelected,
         Func<Task> saveAll)
     {
         var vm = new ImportQuestionsViewModel(_triviaService, this);
-
         vm.GetSelectedPack = getSelected;
         vm.SaveAllAsync = saveAll;
 

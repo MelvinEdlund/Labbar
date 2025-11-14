@@ -7,13 +7,13 @@
              xmlns:models="clr-namespace:Labb3_Quiz.Models"
              xmlns:converter="clr-namespace:Labb3_Quiz.Converters"
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+             xmlns:components="clr-namespace:Labb3_Quiz.Views.Components"
              mc:Ignorable="d" 
              Background="White"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converter:BoolInverterConverter x:Key="InverseBoolConverter"/>
-        <converter:AndBoolConverter x:Key="AndBoolConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -141,54 +141,7 @@
         </Grid>
 
         <!-- Resultat (när quizet är klart) -->
-        <Grid Grid.Row="0" 
-              VerticalAlignment="Center" 
-              HorizontalAlignment="Center"
-              Visibility="{Binding ShowResults, Converter={StaticResource BoolToVisibilityConverter}}">
-            <StackPanel>
-                <TextBlock 
-                    Text="Complete!"
-                    FontSize="24"
-                    FontWeight="Bold"
-                    HorizontalAlignment="Center"
-                    Margin="0,0,0,20"/>
-                <TextBlock 
-                    FontSize="16"
-                    HorizontalAlignment="Center"
-                    Margin="0,0,0,30">
-                    <TextBlock.Text>
-                        <MultiBinding StringFormat="You got {0} out of {1} answers correct!">
-                            <Binding Path="Score"/>
-                            <Binding Path="TotalQuestions"/>
-                        </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
-                <Button 
-                    FontSize="16"
-                    Padding="25,12"
-                    HorizontalAlignment="Center"
-                    Command="{Binding StartRoundCommand}">
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <fa:IconBlock Icon="RotateRight" Margin="0,0,10,0"/>
-                            <TextBlock Text="Restart!"/>
-                        </StackPanel>
-                    </Button.Content>
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Background" Value="#F0F0F0"/>
-                            <Setter Property="BorderBrush" Value="#CCCCCC"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#E0E0E0"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-            </StackPanel>
-        </Grid>
+        <components:ResultView Grid.Row="0" 
+                               Visibility="{Binding ShowResults, Converter={StaticResource BoolToVisibilityConverter}}"/>
     </Grid>
 </UserControl>

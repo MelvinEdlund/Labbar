@@ -7,6 +7,7 @@ using System.Net.Http;
 
 namespace Labb3_Quiz.ViewModels;
 
+// ViewModel för import-dialog (hämtar frågor från API → mappar till Question → sparar till pack)
 public class ImportQuestionsViewModel : ViewModelBase
 {
     private readonly ITriviaService _trivia;
@@ -51,7 +52,6 @@ public class ImportQuestionsViewModel : ViewModelBase
         }
     }
 
-
     public bool IsBusy
     {
         get => _isBusy;
@@ -64,6 +64,7 @@ public class ImportQuestionsViewModel : ViewModelBase
             CancelCommand.RaiseCanExecuteChanged();
         }
     }
+
 
     public string Status
     {
@@ -79,7 +80,7 @@ public class ImportQuestionsViewModel : ViewModelBase
     public DelegateCommand ImportCommand { get; }
     public DelegateCommand CancelCommand { get; }
 
-    // För integration med Main/Config:
+    // Sätts av DialogService när dialogen öppnas
     public Func<QuestionPackViewModel?> GetSelectedPack { get; set; } = () => null;
     public Func<Task> SaveAllAsync { get; set; } = () => Task.CompletedTask;
 
@@ -92,6 +93,7 @@ public class ImportQuestionsViewModel : ViewModelBase
         CancelCommand = new DelegateCommand(_ => _cts?.Cancel(), _ => IsBusy);
     }
 
+    // Hämtar kategorier från API (HTTP GET → JSON → deserialisering)
     private async Task LoadCategoriesAsync()
     {
         try
@@ -124,6 +126,7 @@ public class ImportQuestionsViewModel : ViewModelBase
         }
     }
 
+    // Importerar frågor från API (HTTP GET → JSON → mappar till Question → lägger till i pack → sparar till JSON)
     private async Task ImportAsync()
     {
         _cts = new CancellationTokenSource();
@@ -138,8 +141,7 @@ public class ImportQuestionsViewModel : ViewModelBase
 
             switch (data.Response_Code)
             {
-                case 0:
-                    break;
+                case 0: break;
                 case 1:
                     _dialogs.ShowInfo("Inga frågor matchade ditt val. Prova annan kombination.");
                     Status = "Inga frågor hittades";
@@ -169,6 +171,7 @@ public class ImportQuestionsViewModel : ViewModelBase
                 return;
             }
 
+            // Mappar OpenTdbQuestion (API) → Question (vår modell) och blandar alternativ
             var mappedQuestions = data.Results
                 .Where(r => r.Type == "multiple" && r.Incorrect_Answers.Count >= 3)
                 .Select(r =>
@@ -181,6 +184,7 @@ public class ImportQuestionsViewModel : ViewModelBase
 
                     if (options.Count != 4) return null;
 
+                    // Blanda alternativ slumpmässigt (Fisher-Yates)
                     var rng = new Random();
                     for (int i = options.Count - 1; i > 0; i--)
                     {
@@ -213,12 +217,9 @@ public class ImportQuestionsViewModel : ViewModelBase
             }
 
             foreach (var q in mappedQuestions)
-            {
                 targetPack.Questions.Add(q!);
-            }
 
             await SaveAllAsync();
-
             Status = $"Importerade {mappedQuestions.Count} frågor till \"{targetPack.Name}\".";
             _dialogs.ShowInfo(Status);
         }
@@ -244,13 +245,5 @@ public class ImportQuestionsViewModel : ViewModelBase
             _cts = null;
         }
     }
-
-    private PackDifficulty MapDifficulty(string? diff) => (diff ?? "").ToLowerInvariant() switch
-    {
-        "easy" => PackDifficulty.Easy,
-        "medium" => PackDifficulty.Medium,
-        "hard" => PackDifficulty.Hard,
-        _ => PackDifficulty.Medium
-    };
 }
 

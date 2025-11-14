@@ -36,28 +36,24 @@
 
         <!-- Answer options -->
         <StackPanel Grid.Row="1" Margin="0,0,0,15">
-            <!-- Correct Answer (first option) -->
             <Label Content="Correct Answer:" FontWeight="Bold" Margin="0,0,0,5"/>
             <TextBox 
                 Text="{Binding SelectedQuestion.Options[0].Text, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, FallbackValue=''}"
                 Height="30"
                 Margin="0,0,0,15"/>
 
-            <!-- First Incorrect Answer -->
             <Label Content="First Incorrect Answer:" FontWeight="Bold" Margin="0,0,0,5"/>
             <TextBox 
                 Text="{Binding SelectedQuestion.Options[1].Text, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, FallbackValue=''}"
                 Height="30"
                 Margin="0,0,0,15"/>
 
-            <!-- Second Incorrect Answer -->
             <Label Content="Second Incorrect Answer:" FontWeight="Bold" Margin="0,0,0,5"/>
             <TextBox 
                 Text="{Binding SelectedQuestion.Options[2].Text, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, FallbackValue=''}"
                 Height="30"
                 Margin="0,0,0,15"/>
 
-            <!-- Third Incorrect Answer -->
             <Label Content="Third Incorrect Answer:" FontWeight="Bold" Margin="0,0,0,5"/>
             <TextBox 
                 Text="{Binding SelectedQuestion.Options[3].Text, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, FallbackValue=''}"

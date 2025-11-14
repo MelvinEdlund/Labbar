@@ -22,7 +22,6 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Pack header with buttons -->
         <Grid Grid.Row="0" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -67,13 +66,11 @@
             </StackPanel>
         </Grid>
 
-        <!-- Questions list -->
         <components:DisplayQuestionPackComponent 
             Grid.Row="1" 
             Grid.Column="0"
             Margin="5"/>
 
-        <!-- Question editor -->
         <components:AddQuestionComponent 
             Grid.Row="0" 
             Grid.Column="1"

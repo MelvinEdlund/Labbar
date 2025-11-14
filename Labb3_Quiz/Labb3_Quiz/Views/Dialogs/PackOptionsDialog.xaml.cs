@@ -1,12 +1,9 @@
 using System.Windows;
-using Labb3_Quiz.Models;
 using Labb3_Quiz.ViewModels;
 
 namespace Labb3_Quiz.Views.Dialogs;
 
-/// <summary>
-/// Dialog for editing pack options (name, difficulty, time per question).
-/// </summary>
+// (binder till QuestionPackViewModel)
 public partial class PackOptionsDialog : Window
 {
     public PackOptionsDialog(QuestionPackViewModel packViewModel)

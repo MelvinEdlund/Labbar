@@ -5,6 +5,7 @@ using System.Text.Json;
 
 namespace Labb3_Quiz.Services.Trivia;
 
+// hämta data från OpenTDB API (HTTP GET → JSON → C#-objekt)
 public class OpenTdbService : ITriviaService
 {
     private readonly HttpClient _http;
@@ -15,33 +16,27 @@ public class OpenTdbService : ITriviaService
         {
             BaseAddress = new Uri("https://opentdb.com/")
         };
-        // Timeout rimlig för UI
         _http.Timeout = TimeSpan.FromSeconds(15);
     }
 
+    // Hämtar kategorier från API (deserialiserar JSON → OpenTdbCategoryListResponse)
     public async Task<List<OpenTdbCategory>> GetCategoriesAsync(CancellationToken ct = default)
     {
         try
         {
-            // /api_category.php
             var resp = await _http.GetFromJsonAsync<OpenTdbCategoryListResponse>("api_category.php", ct)
                        ?? new OpenTdbCategoryListResponse();
             return resp.Trivia_Categories ?? new();
         }
-        catch (HttpRequestException)
-        {
-            throw;
-        }
-        catch (TaskCanceledException)
-        {
-            throw;
-        }
+        catch (HttpRequestException) { throw; }
+        catch (TaskCanceledException) { throw; }
         catch (Exception)
         {
             throw new HttpRequestException("Failed to fetch categories from OpenTDB");
         }
     }
 
+    // Hämtar frågor från API (bygg URL → HTTP GET → deserialisera JSON → dekoda text)
     public async Task<OpenTdbQuestionResponse> GetQuestionsAsync(
         int amount, int? categoryId, string? difficulty, CancellationToken ct = default)
     {
@@ -61,7 +56,6 @@ public class OpenTdbService : ITriviaService
                 queryParams.Add($"difficulty={difficulty.ToLowerInvariant()}");
 
             var url = $"api.php?{string.Join("&", queryParams)}";
-            
             using var resp = await _http.GetAsync(url, ct);
             resp.EnsureSuccessStatusCode();
 
@@ -70,7 +64,7 @@ public class OpenTdbService : ITriviaService
             var data = JsonSerializer.Deserialize<OpenTdbQuestionResponse>(json, options)
                        ?? new OpenTdbQuestionResponse();
 
-            // Dekoda all text (URL + HTML-entiteter)
+            // Dekoda URL- och HTML-kodad text (t.ex. "What%20is%20C%23%3F" → "What is C#?")
             foreach (var q in data.Results)
             {
                 q.Question = DecodeText(q.Question);
@@ -82,31 +76,20 @@ public class OpenTdbService : ITriviaService
 
             return data;
         }
-        catch (HttpRequestException)
-        {
-            throw;
-        }
-        catch (TaskCanceledException)
-        {
-            throw;
-        }
+        catch (HttpRequestException) { throw; }
+        catch (TaskCanceledException) { throw; }
         catch (Exception ex)
         {
             throw new HttpRequestException($"Failed to fetch questions from OpenTDB: {ex.Message}", ex);
         }
     }
 
+    // Dekoderar URL- och HTML-kodad text från API
     private static string DecodeText(string encodedText)
     {
         if (string.IsNullOrEmpty(encodedText)) return encodedText;
-
-        // URL decode (url3986)
         var urlDecoded = Uri.UnescapeDataString(encodedText);
-        
-        // HTML decode
-        var htmlDecoded = WebUtility.HtmlDecode(urlDecoded);
-        
-        return htmlDecoded;
+        return WebUtility.HtmlDecode(urlDecoded);
     }
 }
 

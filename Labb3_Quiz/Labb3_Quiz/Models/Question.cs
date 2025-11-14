@@ -1,6 +1,5 @@
 ﻿namespace Labb3_Quiz.Models;
 
-
 public class Question
 {
     public string Text { get; set; } = "";

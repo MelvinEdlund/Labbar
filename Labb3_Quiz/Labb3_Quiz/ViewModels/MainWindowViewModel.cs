@@ -6,6 +6,7 @@ using System.Windows;
 
 namespace Labb3_Quiz.ViewModels;
 
+// Huvud-ViewModel (koordinerar packs, laddning/sparande, edit/play mode)
 public class MainWindowViewModel : ViewModelBase
 {
     private readonly IStorageService _storageService;
@@ -18,19 +19,17 @@ public class MainWindowViewModel : ViewModelBase
     {
         _storageService = new LocalAppDataStorageService();
         _dialogService = new DialogService();
-        
         Packs = new ObservableCollection<QuestionPackViewModel>();
         PlayerViewModel = new PlayerViewModel(this, _dialogService);
         ConfigurationViewModel = new ConfigurationViewModel(this, _dialogService);
 
-        // Commands
         ShowConfigCommand = new DelegateCommand(_ => IsPlayMode = false);
         ShowPlayerCommand = new DelegateCommand(_ => IsPlayMode = true, _ => ActivePack != null && ActivePack.Questions.Count > 0);
         ToggleFullScreenCommand = new DelegateCommand(_ => IsFullScreen = !IsFullScreen);
         CreateNewPackCommand = new DelegateCommand(_ => CreateNewPack());
         RemoveQuestionPackCommand = new DelegateCommand(_ => RemoveQuestionPack(), _ => ActivePack != null);
         SaveAllCommand = new DelegateCommand(async _ => await SaveAllAsync());
-        SetActivePackCommand = new DelegateCommand(pack => ActivePack = pack as QuestionPackViewModel);
+        SetActivePackCommand = new DelegateCommand(pack => ActivePack = pack as QuestionPackViewModel, _ => !_isPlayMode);
         ExitProgramCommand = new DelegateCommand(_ => Application.Current.Shutdown());
         ImportQuestionsCommand = new DelegateCommand(_ => ImportQuestions());
 
@@ -38,18 +37,14 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     public ObservableCollection<QuestionPackViewModel> Packs { get; }
-    
+
     public QuestionPackViewModel? ActivePack
     {
         get => _activePack;
         set
         {
-            // Om man byter pack när man är i play mode, gå tillbaka till edit mode
             if (_isPlayMode && value != _activePack)
-            {
                 IsPlayMode = false;
-            }
-
             _activePack = value;
             RaisePropertyChanged();
             ShowPlayerCommand.RaiseCanExecuteChanged();
@@ -67,6 +62,7 @@ public class MainWindowViewModel : ViewModelBase
             _isPlayMode = value;
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(CurrentView));
+            SetActivePackCommand.RaiseCanExecuteChanged();
         }
     }
 
@@ -85,7 +81,6 @@ public class MainWindowViewModel : ViewModelBase
     public PlayerViewModel PlayerViewModel { get; }
     public ConfigurationViewModel ConfigurationViewModel { get; }
 
-    // Commands
     public DelegateCommand ShowConfigCommand { get; }
     public DelegateCommand ShowPlayerCommand { get; }
     public DelegateCommand ToggleFullScreenCommand { get; }
@@ -96,28 +91,24 @@ public class MainWindowViewModel : ViewModelBase
     public DelegateCommand ExitProgramCommand { get; }
     public DelegateCommand ImportQuestionsCommand { get; }
 
-
     private void CreateNewPack()
     {
         var pack = new QuestionPack { Name = "New Pack" };
         var packViewModel = new QuestionPackViewModel(pack);
         Packs.Add(packViewModel);
-        ActivePack = packViewModel; 
+        ActivePack = packViewModel;
     }
 
     private void RemoveQuestionPack()
     {
         if (ActivePack == null) return;
-
         if (_dialogService.ShowConfirm($"Delete pack '{ActivePack.Name}'?", "Delete Pack"))
         {
             Packs.Remove(ActivePack);
-            ActivePack = Packs.FirstOrDefault(); 
+            ActivePack = Packs.FirstOrDefault();
         }
     }
 
-
-    /// Laddar questionpacks på start och kopierar över startfrågorna (c# questions) från Resources på första start
     private async Task LoadPacksAsync()
     {
         try
@@ -127,10 +118,7 @@ public class MainWindowViewModel : ViewModelBase
             {
                 Packs.Clear();
                 foreach (var pack in packs)
-                {
                     Packs.Add(new QuestionPackViewModel(pack));
-                }
-                
                 ActivePack = Packs.FirstOrDefault(p => p.Name == "C#frågor") ?? Packs.FirstOrDefault();
             });
         }
@@ -143,7 +131,6 @@ public class MainWindowViewModel : ViewModelBase
         }
     }
 
-
     private async Task SaveAllAsync(bool showMessage = true)
     {
         try
@@ -151,9 +138,7 @@ public class MainWindowViewModel : ViewModelBase
             var packs = Packs.Select(p => p.Model).ToList();
             await _storageService.SavePacksAsync(packs);
             if (showMessage)
-            {
                 _dialogService.ShowInfo("Packs saved successfully.");
-            }
         }
         catch (Exception ex)
         {
@@ -168,7 +153,6 @@ public class MainWindowViewModel : ViewModelBase
             _dialogService.ShowError("Vänligen välj ett frågepack först innan du importerar frågor.");
             return;
         }
-
         _dialogService.ShowImportQuestionsDialog(
             getSelected: () => ActivePack,
             saveAll: async () => await SaveAllAsync(showMessage: false)
